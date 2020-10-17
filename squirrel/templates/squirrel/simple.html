@@ -1,0 +1,9 @@
+<html>
+	<body>
+		<ul>
+			{% for sighting in sightings %}
+			<li> Latitude: {{sighting.latitude}}; Longitude: {{sighting.longitude}} </li>
+			{% endfor %}
+		</ul>
+	</body>
+</html>

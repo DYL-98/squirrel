@@ -15,11 +15,15 @@ class Command(BaseCommand):
         
         with open(file_) as fp:
             reader = csv.DictReader(fp)
+            
+            # delete all existing records
+            Squirrel.objects.all().delete()
 
+            # Insert from data
             for item in reader:
                 obj = Squirrel()
-                obj.latitude = item['X']
-                obj.longitude = item['Y']
+                obj.longitude = item['X']
+                obj.latitude = item['Y']
                 obj.unique_squirrel_id = item['Unique Squirrel ID']
                 obj.date = datetime.strptime(item['Date'],'%m%d%Y')
                 obj.shift = item['Shift']

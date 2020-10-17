@@ -37,6 +37,7 @@ class Squirrel(models.Model):
         max_length = 8,
         help_text = _('The age group of the squirrel.'),
         blank = True,
+        choices = Age_choice.choices,
     )
 
     def __str__(self):
