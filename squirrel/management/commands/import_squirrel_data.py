@@ -11,7 +11,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **kwargs):
         file_ = kwargs['file_location']
-
+        
         with open(file_) as fp:
             reader = csv.DictReader(fp)
 
