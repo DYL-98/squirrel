@@ -2,7 +2,7 @@
 	<body>
 		<ul>
 			{% for sighting in sightings %}
-			<li> Latitude: {{sighting.latitude}}; Longitude: {{sighting.longitude}} </li>
+			<li> ID: {{sighting.unique_squirrel_id}}; Date: {{sighting.date}} </li>
 			{% endfor %}
 		</ul>
 	</body>
