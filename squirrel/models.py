@@ -35,7 +35,7 @@ class Squirrel(models.Model):
 
     age = models.CharField(
         max_length = 8,
-        help_text = _('The age group of the squirrel.')
+        help_text = _('The age group of the squirrel.'),
         blank = True,
     )
 
