@@ -1,0 +1,85 @@
+
+
+{% extends 'squirrel/base.html' %}
+
+{% load static %}
+{% block title %} Some interesting Statistics{% endblock %}
+{% block main %}
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-8 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">
+                <div class="pet-name">
+                  <strong>Some Interesting Statistics</strong>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">West most point:</span>
+                  <span>
+                    {{west_most }} W
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">East most point:</span>
+                  <span>
+                    {{ east_most }} W
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">North most point:</span>
+                  <span>
+                    {{ north_most }} N
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">South most point:</span>
+                  <span>
+                    {{ south_most }}  N
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">More frequent sightings during:</span>
+                  <span>
+                    {{ shift_mode }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Most frequent sightings in:</span>
+                  <span>
+                    {{ month_mode }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Donimating age group:</span>
+                  <span>
+                    {{ age_mode }}
+                  </span>
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_footer %}
+  <script>
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+  </script>
+{% endblock %}
+

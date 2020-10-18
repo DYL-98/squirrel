@@ -1,3 +1,4 @@
+from django.db.models import Min, Max
 from django.urls import reverse
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -6,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from .forms import SquirrelForm
+import datetime
 
 def simple(request):
     sightings = Squirrel.objects.values('latitude', 'longitude')[:100]
@@ -70,6 +72,57 @@ def add(request):
         form = SquirrelForm()
         context = {'form': form}
         return render(request, 'squirrel/add.html', context)
+
+def stats(request):
+    all_sightings_qry = Squirrel.objects.all()
+    
+    # Stats of interest
+    north_most = 90
+    south_most = -90
+    east_most = -60
+    west_most = -90
+    shift_mode = ""
+    month_mode = ""
+    age_mode = ""
+
+    # extreme location
+    lat_dict = all_sightings_qry.aggregate(max_lat = Max('latitude'), min_lat = Min('latitude'))
+    long_dict = all_sightings_qry.aggregate(max_long = Max('longitude'), min_long = Min('longitude'))
+    north_most = lat_dict['max_lat']
+    south_most = lat_dict['min_lat']
+    west_most = -1*float(long_dict['min_long'])
+    east_most = -1*float(long_dict['max_long'])
+
+    # shift mode
+    count_AM = all_sightings_qry.filter(shift='AM').count()
+    count_PM = all_sightings_qry.filter(shift='PM').count()
+    if count_AM >= count_PM:
+        shift_mode = "0:00-11:59 AM"
+    else:
+        shift_mode = "12:00-11:59 PM"
+
+    # Month mode
+    all_dates = list(all_sightings_qry.values('date'))
+    all_dates = [item['date'].strftime("%B") for item in all_dates]
+    month_mode = max(set(all_dates), key=all_dates.count)
+
+    # Age mode
+    count_adult = all_sightings_qry.filter(age="Adult").count()
+    count_juvenile = all_sightings_qry.filter(age="Juvenile").count()
+    age_mode = ("Adult" if count_adult >= count_juvenile else "Juvenile")
+
+    context = {
+        "north_most": north_most,
+        "south_most": south_most,
+        "west_most": west_most,
+        "east_most": east_most,
+        "shift_mode": shift_mode,
+        "month_mode": month_mode,
+        "age_mode": age_mode,
+    }
+
+    return render(request, 'squirrel/stats.html', context)
+
 
 
 
