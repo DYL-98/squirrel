@@ -1,0 +1,152 @@
+{% extends 'squirrel/base.html' %}
+
+{% load static %}
+{% block title %} - {{ sighting.unique_squirrel_id }}{% endblock %}
+{% block main %}
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-8 shadow-sm">
+            <div class="card-body">
+              <p class="card-text"> 
+                <div class="pet-name">
+                  <strong>{{ sighting.unique_squirrel_id }}</strong>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Latitude:</span>
+                  <span>
+                    {{ sighting.latitude }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Longitude:</span>
+                  <span>
+                    {{ sighting.longitude }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Shift:</span>
+                  <span>
+                    {{ sighting.shift }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Date:</span>
+                  <span>
+                    {{ sighting.date }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Age:</span>
+                  <span>
+                    {{ sighting.age }}
+                  </span>
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          Update this Sighting >>
+        </div>
+        <div class="col-md-4">
+          <form id="submit" method="post" action="{% url 'squirrel:update_request' sighting.id %}" class="input-group mb-3">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="latitude">Latitude: </label>
+              <input type="text" class="form-control" id="latitude" placeholder="{{sighting.latitude}}">
+            </div>
+            <div class="form-group">
+              <label for="longitude">Longitude: </label>
+              <input type="text" class="form-control" id="longitude" placeholder="{{sighting.longitude}}">
+            </div>
+            <div class="form-group">
+              <label for="unique_squirrel_id">Unique Squirrel ID: </label>
+              <input type="text" class="form-control" id="unique_squirrel_id" placeholder="{{sighting.unique_squirrel_id}}">
+            </div>
+            <div class="form-group">
+              <label for="longitude">Date: </label>
+              <input type="date" class="form-control" id="date" placeholder="{{sighting.date}}" onfocus="(this.type='date')">
+            </div>
+            <div class="form-group">
+              <select name="shift" id="shift">
+              <option value="" disabled selected> Select shift </option>
+              <option value="AM"> AM </option>
+              <option value="PM"> PM </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="age">Age: </label>
+              <select name="age" id="age">
+              <option hidden disabled selected value> Select Age </option>
+              <option value="AM"> Adult </option>
+              <option value="PM"> Juvenile </option>
+              </select>
+            </div>
+            <!--
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">Request</button>
+            </div>
+            -->
+            <div id="errors" class="mb-3"></div>
+          </form>
+          <button class="btn btn-outline-secondary" type="submit">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_footer %}
+  <script>
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    $("#submit").submit(function(event) {
+      event.preventDefault();
+
+      var new_latitude = $("#latitude").val();
+      var new_longitude = $("#longitude").val();
+      var new_unique_squirrel_id = $("#unique_squirrel_id").val()
+      var new_date = $("#date").val()
+      var new_shift = $("#shift").val()
+      var new_age = $("#age").val()
+
+      $.post({
+        url: "{% url 'squirrel:update_request' sighting.id %}",
+        data: {
+          latitude: new_latitude,
+          longitude: new_longitude,
+          unique_squirrel_id: new_unique_squirrel_id,
+          date: new_date,
+          shift: new_shift,
+          age: new_age,
+        },
+        dataType: "json",
+      }).done(function(response) {
+        $("#submit").html('Your request has been received!');
+      }).fail(function(response) {
+        if (response.statusText === "error") {
+          var errors = "Oops, looks like an error on our side. Please try again later.";
+        } else {
+          var errors = response.responseJSON.errors.adopter;
+        }
+        $("#submit").html(errors);
+      });
+    });
+  </script>
+{% endblock %}
+
