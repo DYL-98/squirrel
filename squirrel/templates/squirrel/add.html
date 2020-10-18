@@ -1,0 +1,40 @@
+{% extends 'squirrel/base.html' %}
+
+{% load static %}
+{% block title %} - Add a new sighting - {% endblock %}
+{% block main %}
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          Add a new sighting >>
+        </div>
+        <div class="col-md-4">
+          <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value='Save'>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_footer %}
+  <script>
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+  </script>
+{% endblock %}
+

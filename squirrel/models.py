@@ -4,29 +4,30 @@ from django.utils.translation import gettext as _
 class Squirrel(models.Model):
     
     latitude = models.FloatField(
-        help_text = _('The latitude of the squirrel being seen.'),
+        help_text = _('*Required*'),
     )
 
     longitude = models.FloatField(
-        help_text = _('The longitude of the squirrel being seen.'),
+        help_text = _('*Required*'),
     )
 
     unique_squirrel_id = models.CharField(
         max_length = 50,
-        help_text = _('The unique ID of this squirrel.')
+        help_text = _('*Required*')
     )
 
     class Shift_choice(models.TextChoices):
-        AM = 'AM', _('in the morning')
-        PM = 'PM', _('in the afternoon')
+        AM = 'AM', _('AM')
+        PM = 'PM', _('PM')
 
     shift = models.CharField(
         max_length = 2,
+        help_text =_('*Required*'),
         choices = Shift_choice.choices,
     )
 
     date = models.DateField(
-        help_text = _('The date that the squirrel was seen.'),
+        help_text = _('*Required. Input as YYYY-mm-dd.*'),
     )
 
     class Age_choice(models.TextChoices):
@@ -35,7 +36,7 @@ class Squirrel(models.Model):
 
     age = models.CharField(
         max_length = 8,
-        help_text = _('The age group of the squirrel.'),
+        help_text = _('Optional'),
         blank = True,
         choices = Age_choice.choices,
     )
