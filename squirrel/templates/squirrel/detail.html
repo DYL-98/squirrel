@@ -1,0 +1,73 @@
+{% extends 'squirrel/base.html' %}
+
+{% load static %}
+
+{% block title %} - {{ pet.name }}{% endblock %}
+
+{% block main %}
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-8 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">
+                <div class="pet-name">
+                  <strong>{{ sighting.unique_squirrel_id }}</strong>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Latitude:</span>
+                  <span>
+                    {{ sighting.latitude }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Longitude:</span>
+                  <span>
+                    {{ sighting.longitude }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Shift:</span>
+                  <span>
+                    {{ sighting.shift }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Date:</span>
+                  <span>
+		    {{ sighting.date }}
+                  </span>
+                </div>
+                <div>
+                  <span class="text-muted font-italic">Age:</span>
+                  <span>
+                    {{ sighting.age }}
+                  </span>
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_footer %}
+  <script>
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+  </script>
+{% endblock %}
