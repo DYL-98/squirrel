@@ -30,14 +30,17 @@ def edit(request, squirrel_id):
         form = SquirrelForm(request.POST or None)
         if form.is_valid():
             # Do somthing
-            squirrel.latitude = form.cleaned_data['latitude']
-            squirrel.longitude = form.cleaned_data['longitude']
-            squirrel.unique_squirrel_id = form.cleaned_data['unique_squirrel_id']
-            squirrel.date = form.cleaned_data['date']
-            squirrel.shift = form.cleaned_data['shift']
-            squirrel.age= form.cleaned_data['age']
-            squirrel.save()
-            return HttpResponse('Thank you! Your change has been saved.')
+            if squirrel.unique_squirrel_id == form.cleaned_data['unique_squirrel_id']:
+                return HttpResponse('Oops, it looks like the Unique Squirrel ID you entered is occupied by another cute little squirrel!')
+            else:
+                squirrel.latitude = form.cleaned_data['latitude']
+                squirrel.longitude = form.cleaned_data['longitude']
+                squirrel.unique_squirrel_id = form.cleaned_data['unique_squirrel_id']
+                squirrel.date = form.cleaned_data['date']
+                squirrel.shift = form.cleaned_data['shift']
+                squirrel.age= form.cleaned_data['age']
+                squirrel.save()
+                return HttpResponse('Thank you! Your change has been saved.')
         else:
             return HttpResponse('Sorry! Your input format is invalid. Please check again.')
     else:
