@@ -30,7 +30,7 @@ def edit(request, squirrel_id):
         form = SquirrelForm(request.POST or None)
         if form.is_valid():
             # Do somthing
-            if squirrel.unique_squirrel_id == form.cleaned_data['unique_squirrel_id']:
+            if squirrel.unique_squirrel_id != form.cleaned_data['unique_squirrel_id'] and Squirrel.objects.filter(unique_squirrel_id = form.cleaned_data['unique_squirrel_id']).exists():
                 return HttpResponse('Oops, it looks like the Unique Squirrel ID you entered is occupied by another cute little squirrel!')
             else:
                 squirrel.latitude = form.cleaned_data['latitude']
