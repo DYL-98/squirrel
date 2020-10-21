@@ -30,7 +30,9 @@ def edit(request, squirrel_id):
         form = SquirrelForm(request.POST or None)
         if form.is_valid():
             # Do somthing
-            if squirrel.unique_squirrel_id != form.cleaned_data['unique_squirrel_id'] and Squirrel.objects.filter(unique_squirrel_id = form.cleaned_data['unique_squirrel_id']).exists():
+            if form.cleaned_data['unique_squirrel_id'] == 'stats' or form.cleaned_data['unique_squirrel_id'] == 'add':
+                return HttpResponse('Oops, this is really a peducilar ID. Try another ID~')
+            elif squirrel.unique_squirrel_id != form.cleaned_data['unique_squirrel_id'] and Squirrel.objects.filter(unique_squirrel_id = form.cleaned_data['unique_squirrel_id']).exists():
                 return HttpResponse('Oops, it looks like the Unique Squirrel ID you entered is occupied by another cute little squirrel!')
             else:
                 squirrel.latitude = form.cleaned_data['latitude']
@@ -60,7 +62,9 @@ def add(request):
             obj.shift = form.cleaned_data['shift']
             obj.age = form.cleaned_data['age']
             # duplicate check
-            if Squirrel.objects.filter(unique_squirrel_id = form.cleaned_data['unique_squirrel_id']).exists():  
+            if form.cleaned_data['unique_squirrel_id'] == 'stats' or form.cleaned_data['unique_squirrel_id']=='add':
+                return HttpResponse('Oops, it looks like the Unique Squirrel ID you entered is really peculiar. Try another ID~')
+            elif Squirrel.objects.filter(unique_squirrel_id = form.cleaned_data['unique_squirrel_id']).exists():  
              # redirect to edit page
                 this_squirrel = get_object_or_404(Squirrel, unique_squirrel_id = form.cleaned_data['unique_squirrel_id'])
                 form = SquirrelForm()
